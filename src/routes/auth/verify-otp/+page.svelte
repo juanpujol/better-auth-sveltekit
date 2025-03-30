@@ -1,7 +1,10 @@
 <script lang="ts">
-  import { authClient } from "$lib/auth-client"
+  import { createAuthClient } from "$lib/auth-client"
   import { goto } from "$app/navigation";
+  import { page } from "$app/state";
   let { data } = $props();
+
+  const authClient = createAuthClient(page.url.origin);
 
   async function signInWithOTP(event: Event) {
     event.preventDefault();

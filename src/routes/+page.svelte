@@ -1,5 +1,8 @@
 <script lang="ts">
-  import { authClient } from "$lib/auth-client";
+  import { createAuthClient } from "$lib/auth-client";
+  import { page } from "$app/state";
+
+  const authClient = createAuthClient(page.url.origin);
 
   async function signOut() {
     await authClient.signOut();
