@@ -4,6 +4,15 @@
   async function signOut() {
     await authClient.signOut();
   }
+
+  async function getSession() {
+    const session = await authClient.getSession();
+    console.log("session", session);
+  }
+
+  $effect(() => {
+    getSession();
+  })
 </script>
 
 <h1>Welcome to SvelteKit</h1>

@@ -57,7 +57,7 @@
           </div>
         </div>
 
-        <form class="space-y-6">
+        <form method="post" class="space-y-6">
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700">
               Email address
