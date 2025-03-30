@@ -19,6 +19,16 @@ const authGuard: Handle = async ({ event, resolve }) => {
     return redirect(302, "/auth");
   }
 
+  // Redirect to home if session and on login page
+  // But allow access to sign-out route
+  if (session && event.url.pathname.startsWith("/auth")) {
+    // Check if it's not the sign-out route before redirecting
+    if (!event.url.pathname.includes("/auth/sign-out")) {
+      console.log("Redirecting from auth page to home because user has session");
+      return redirect(302, "/");
+    }
+  }
+
   return resolve({ ...event, locals: { user: session?.user as User } });
 };
 
