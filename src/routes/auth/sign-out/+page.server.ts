@@ -1,4 +1,4 @@
-import { auth } from "$lib/server/auth";
+import { auth, clearCookies } from "$lib/server/auth";
 import type { Actions } from "@sveltejs/kit";
 import { error, redirect } from "@sveltejs/kit";
 
@@ -18,10 +18,7 @@ export const actions: Actions = {
       });
 
       // Delete the session cookie
-      cookies.set('better-auth.session_token', '', {
-        path: "/",
-        maxAge: 0,
-      });
+      clearCookies(cookies);
     } catch (err) {
       console.error(err);
     } finally {
