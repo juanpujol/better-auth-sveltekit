@@ -1,7 +1,3 @@
 {
-	"cSpell.words": [
-		"httponly",
-		"libsql",
-		"samesite"
-	]
+	"cSpell.words": ["httponly", "libsql", "samesite"]
 }

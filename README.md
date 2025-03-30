@@ -64,30 +64,30 @@ This project demonstrates how to integrate the `better-auth` library with Svelte
 ```typescript
 // src/lib/server/auth.ts
 export const auth = betterAuth({
-  appName: "BetterAuth SvelteKit Example",
-  advanced: {
-    cookiePrefix,
-  },
-  emailAndPassword: {
-    enabled: false
-  },
-  socialProviders: {
-    github: {
-      clientId: OAUTH_GITHUB_CLIENT_ID,
-      clientSecret: OAUTH_GITHUB_CLIENT_SECRET,
-    }
-  },
-  database: drizzleAdapter(db, {
-    provider: 'sqlite'
-  }),
-  plugins: [
-    sveltekitCookies(),
-    emailOTP({
-      async sendVerificationOTP({ email, otp, type}) {
-        // Email sending logic
-      },
-    })
-  ]
+	appName: 'BetterAuth SvelteKit Example',
+	advanced: {
+		cookiePrefix
+	},
+	emailAndPassword: {
+		enabled: false
+	},
+	socialProviders: {
+		github: {
+			clientId: OAUTH_GITHUB_CLIENT_ID,
+			clientSecret: OAUTH_GITHUB_CLIENT_SECRET
+		}
+	},
+	database: drizzleAdapter(db, {
+		provider: 'sqlite'
+	}),
+	plugins: [
+		sveltekitCookies(),
+		emailOTP({
+			async sendVerificationOTP({ email, otp, type }) {
+				// Email sending logic
+			}
+		})
+	]
 });
 ```
 
@@ -96,10 +96,10 @@ export const auth = betterAuth({
 ```typescript
 // src/lib/auth-client.ts
 export function createAuthClient(baseURL: string = page.url.origin) {
-  return createBetterAuthClient({
-    baseURL,
-    plugins: [emailOTPClient()],
-  })
+	return createBetterAuthClient({
+		baseURL,
+		plugins: [emailOTPClient()]
+	});
 }
 ```
 
@@ -108,16 +108,16 @@ export function createAuthClient(baseURL: string = page.url.origin) {
 ```typescript
 // src/hooks.server.ts
 const setupAuthHandler: Handle = ({ event, resolve }) => {
-  return svelteKitHandler({ event, resolve, auth });
+	return svelteKitHandler({ event, resolve, auth });
 };
 
 const authGuard: Handle = async ({ event, resolve }) => {
-  const session = await auth.api.getSession({
-    headers: event.request.headers,
-  });
+	const session = await auth.api.getSession({
+		headers: event.request.headers
+	});
 
-  // Route protection logic
-  // ...
+	// Route protection logic
+	// ...
 };
 
 export const handle: Handle = sequence(setupAuthHandler, authGuard);
@@ -130,25 +130,25 @@ This project uses Drizzle ORM with SQLite to store user data and sessions:
 ```typescript
 // src/lib/server/db/schemas/auth-schema.ts
 export const user = sqliteTable('user', {
-  id: text('id').primaryKey(),
-  name: text('name').notNull(),
-  email: text('email').notNull().unique(),
-  emailVerified: integer('email_verified', { mode: 'boolean' }).notNull(),
-  image: text('image'),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull()
+	id: text('id').primaryKey(),
+	name: text('name').notNull(),
+	email: text('email').notNull().unique(),
+	emailVerified: integer('email_verified', { mode: 'boolean' }).notNull(),
+	image: text('image'),
+	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+	updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull()
 });
 
 export const session = sqliteTable('session', {
-  // Session schema
+	// Session schema
 });
 
 export const account = sqliteTable('account', {
-  // Account schema
+	// Account schema
 });
 
 export const verification = sqliteTable('verification', {
-  // Verification tokens schema
+	// Verification tokens schema
 });
 ```
 
@@ -188,16 +188,16 @@ The authentication guard in `hooks.server.ts` protects routes by checking for an
 
 ```typescript
 // Redirect to login if no session and not on login page
-if (!session && !event.url.pathname.startsWith("/auth")) {
-  return redirect(302, "/auth");
+if (!session && !event.url.pathname.startsWith('/auth')) {
+	return redirect(302, '/auth');
 }
 
 // Redirect to home if session and on login page
-if (session && event.url.pathname.startsWith("/auth")) {
-  // Check if it's not the sign-out route before redirecting
-  if (!event.url.pathname.includes("/auth/sign-out")) {
-    return redirect(302, "/");
-  }
+if (session && event.url.pathname.startsWith('/auth')) {
+	// Check if it's not the sign-out route before redirecting
+	if (!event.url.pathname.includes('/auth/sign-out')) {
+		return redirect(302, '/');
+	}
 }
 ```
 

@@ -6,7 +6,7 @@ import type { Cookies } from '@sveltejs/kit';
 import { createAuthMiddleware, emailOTP } from 'better-auth/plugins';
 import { sendEmail } from './email';
 import { parseSetCookieHeader } from 'better-auth/cookies';
-const cookiePrefix = "sveltekit";
+const cookiePrefix = 'sveltekit';
 
 const sveltekitCookies = (): BetterAuthPlugin => ({
 	id: 'sveltekit-cookies',
@@ -40,7 +40,7 @@ const sveltekitCookies = (): BetterAuthPlugin => ({
 							try {
 								event.cookies.set(key, decodeURIComponent(value.value), opts);
 							} catch (_e) {
-								console.error("error setting cookie", _e);
+								console.error('error setting cookie', _e);
 								// this will fail if the cookie is being set on server component
 							}
 						});
@@ -53,46 +53,46 @@ const sveltekitCookies = (): BetterAuthPlugin => ({
 });
 
 export const auth = betterAuth({
-  appName: "BetterAuth SvelteKit Example",
-  advanced: {
-    cookiePrefix,
-  },
-  emailAndPassword: {
-    enabled: false
-  },
-  socialProviders: {
-    github: {
-      clientId: OAUTH_GITHUB_CLIENT_ID,
-      clientSecret: OAUTH_GITHUB_CLIENT_SECRET,
-    }
-  },
+	appName: 'BetterAuth SvelteKit Example',
+	advanced: {
+		cookiePrefix
+	},
+	emailAndPassword: {
+		enabled: false
+	},
+	socialProviders: {
+		github: {
+			clientId: OAUTH_GITHUB_CLIENT_ID,
+			clientSecret: OAUTH_GITHUB_CLIENT_SECRET
+		}
+	},
 	database: drizzleAdapter(db, {
 		provider: 'sqlite'
 	}),
-  plugins: [
-    sveltekitCookies(),
-    emailOTP({
-      async sendVerificationOTP({ email, otp, type}) {
-        if (type === "sign-in") {
-          await sendEmail({
-            from: "Support <support@laiki.com.br>",
-            to: email,
-            subject: "Your access code",
-            body: {
-              text: `Your access code is:\n\n${otp}\n\nSupport.`,
-              html: `
+	plugins: [
+		sveltekitCookies(),
+		emailOTP({
+			async sendVerificationOTP({ email, otp, type }) {
+				if (type === 'sign-in') {
+					await sendEmail({
+						from: 'Support <support@laiki.com.br>',
+						to: email,
+						subject: 'Your access code',
+						body: {
+							text: `Your access code is:\n\n${otp}\n\nSupport.`,
+							html: `
               <p>Your access code is:</p>
               <p><strong>${otp}</strong></p>
               <p>Support Laiki.</p>
-              `,
-            },
-          });
-        }
-      },
-    })
-  ]
+              `
+						}
+					});
+				}
+			}
+		})
+	]
 });
 
 export function clearCookies(cookies: Cookies) {
-  cookies.delete(`${cookiePrefix}.session_token`, { path: "/" });
+	cookies.delete(`${cookiePrefix}.session_token`, { path: '/' });
 }

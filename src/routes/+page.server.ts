@@ -1,7 +1,7 @@
 export async function load({ locals }) {
-  const user = locals.user;
+	const user = locals.user;
 
-  console.log(user);
+	console.log('Get user from server', user);
 
-  return { user };
+	return { user };
 }
